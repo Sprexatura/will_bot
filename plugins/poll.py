@@ -20,12 +20,19 @@ RESPOND_MSG = {
     u'RESULT': u'총 {}명의 다음의 회원들이 참석합니다.\n{}',
 }
 
+NOT_MATCHED = '|'.join(RESPOND_TO.values())
+NOT_MATCHED = u'^(?!' + NOT_MATCHED + u').*$'
+
 class PollPlugin(WillPlugin):
 
     def __init__(self):
         super(PollPlugin, self).__init__()
         self.poll_result = {}
         self.poll_start = False
+
+    @respond_to(NOT_MATCHED)
+    def not_matched(self, message):
+        self.reply(message, '그런 고오급 기능은 {} 님이 만들어 주실꺼에요.'.format(self._caller_name(message)))
 
     @respond_to(RESPOND_TO['HELP'])
     def help_poll(self, message):
