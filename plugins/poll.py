@@ -10,6 +10,7 @@ RESPOND_TO = {
     u'START_POLL': u'참여하실분',
     u'END_POLL': u'조사종료해',
     u'ATTEND': u'참석',
+    u'WILL_BE': u'추가될기능',
 }
 
 RESPOND_MSG = {
@@ -19,6 +20,7 @@ RESPOND_MSG = {
     u'THANKS': u'{} 님 답변 감사합니다.',
     u'RESULT': u'총 {}명의 다음의 회원들이 참석합니다.\n{}',
     u'NOT_MATCHED': u'그런 고오급 기능은 {}님이 만들어 주실꺼에요.',
+    u'WILL_BE': u'Google Sheets와 연동...이 언젠가는 될꺼에요!',
 }
 
 NOT_MATCHED = '|'.join(RESPOND_TO.values())
@@ -34,14 +36,19 @@ class PollPlugin(WillPlugin):
     @respond_to(NOT_MATCHED)
     def not_matched(self, message):
         self.reply(message, RESPOND_MSG['NOT_MATCHED'].format(self._caller_name(message)))
-
+    
+    @respond_to(RESPOND_TO['WILL_BE'])
+    def will_be(self, message):
+        self.reply(message, RESPOND_MSG['WILL_BE'])
+        
     @respond_to(RESPOND_TO['HELP'])
     def help_poll(self, message):
         msg = """
         다음의 명령어가 가능합니다.
         * {}
         * {}
-        """.format(RESPOND_TO['START_POLL'], RESPOND_TO['END_POLL'])
+        * {}
+        """.format(RESPOND_TO['START_POLL'], RESPOND_TO['END_POLL'], RESPOND_TO['WILL_BE'])
         self.reply(message, msg)
         
     @respond_to(RESPOND_TO['START_POLL'])
