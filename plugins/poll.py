@@ -1,0 +1,75 @@
+# encoding: utf-8
+
+import re
+
+from will.plugin import WillPlugin
+from will.decorators import respond_to
+
+RESPOND_TO = {
+    u'HELP': u'사용법',
+    u'START_POLL': u'참여하실분',
+    u'END_POLL': u'조사종료해',
+    u'ATTEND': u'참석',
+}
+
+RESPOND_MSG = {
+    u'NOT_END_POLL': u'진행중인 투표가 있네요. 먼저 종료해주세요.',
+    u'GUIDE_POLL': u'참석하시면 저에게 \'{}\'이라고 답해주세요.'.format(RESPOND_TO['ATTEND']),
+    u'ANSWERED': u'{} 님은 이미 참석한다고 답하셨어요.',
+    u'THANKS': u'{} 님 답변 감사합니다.',
+    u'RESULT': u'총 {}명의 다음의 회원들이 참석합니다.\n{}',
+}
+
+class Poll(WillPlugin):
+
+    def __init__(self):
+        super(Poll, self).__init__()
+        self.poll_result = {}
+        self.poll_start = False
+
+    @respond_to(RESPOND_TO['HELP'])
+    def help_poll(self, message):
+        msg = """
+        다음의 명령어가 가능합니다.
+        * {}
+        * {}
+        """.format(RESPOND_TO['START_POLL'], RESPOND_TO['END_POLL'])
+        self.reply(message, msg)
+        
+    @respond_to(RESPOND_TO['START_POLL'])
+    def start_poll(self, message):
+        self._caller_name(message)
+        if self.poll_start:
+            self.reply(message, RESPOND_MSG['NOT_END_POLL'])
+            return
+        
+        self.poll_start = True
+        self.reply(message, RESPOND_MSG['GUIDE_POLL'])
+
+    def _caller_name(self, message):
+        return message['from'].resource
+        
+    @respond_to(RESPOND_TO['ATTEND'])
+    def count_attend(self, message):
+        if not self.poll_start:
+            return
+
+        caller = self._caller_name(message)
+        
+        if caller in self.poll_result:
+            self.reply(message, RESPOND_MSG['ANSWERED'].format(caller))
+            return
+        
+        self.reply(message, RESPOND_MSG['THANKS'].format(caller))
+        self.poll_result[caller] = True
+
+    @respond_to(RESPOND_TO['END_POLL'])
+    def end_poll(self, message):
+        if not self.poll_start:
+            return
+        self.poll_start = False
+        self.reply(message, RESPOND_MSG['RESULT'].format(len(self.poll_result), self.poll_result.keys()))
+        self.poll_result = {}
+            
+        
+            
