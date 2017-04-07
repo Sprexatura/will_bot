@@ -20,10 +20,10 @@ RESPOND_MSG = {
     u'RESULT': u'총 {}명의 다음의 회원들이 참석합니다.\n{}',
 }
 
-class Poll(WillPlugin):
+class PollPlugin(WillPlugin):
 
     def __init__(self):
-        super(Poll, self).__init__()
+        super(PollPlugin, self).__init__()
         self.poll_result = {}
         self.poll_start = False
 
