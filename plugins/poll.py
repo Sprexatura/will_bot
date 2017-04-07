@@ -18,6 +18,7 @@ RESPOND_MSG = {
     u'ANSWERED': u'{} 님은 이미 참석한다고 답하셨어요.',
     u'THANKS': u'{} 님 답변 감사합니다.',
     u'RESULT': u'총 {}명의 다음의 회원들이 참석합니다.\n{}',
+    u'NOT_MATCHED': u'그런 고오급 기능은 {}님이 만들어 주실꺼에요.',
 }
 
 NOT_MATCHED = '|'.join(RESPOND_TO.values())
@@ -32,7 +33,7 @@ class PollPlugin(WillPlugin):
 
     @respond_to(NOT_MATCHED)
     def not_matched(self, message):
-        self.reply(message, '그런 고오급 기능은 {} 님이 만들어 주실꺼에요.'.format(self._caller_name(message)))
+        self.reply(message, RESPOND_MSG['NOT_MATCHED'].format(self._caller_name(message)))
 
     @respond_to(RESPOND_TO['HELP'])
     def help_poll(self, message):
