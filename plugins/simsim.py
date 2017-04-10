@@ -89,7 +89,7 @@ class SimSimPlugin(WillPlugin):
 
         self._register(question, answer)
 
-    @respond_to(u'상연아 (?P"<question>".*")')
+    @respond_to(u'상연아 (?P<question>".*")')
     def answer(self, message, question):
         answer = self._answer(question)
         if not answer:
