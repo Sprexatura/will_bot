@@ -11,6 +11,9 @@ RESPOND_TO = {
     u'END_POLL': u'조사종료해',
     u'ATTEND': u'참석',
     u'WILL_BE': u'추가될기능',
+    u'hello': u'',
+    u'안녕': u'',
+    u'사과해': u'',
 }
 
 RESPOND_MSG = {
