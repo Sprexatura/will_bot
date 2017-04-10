@@ -11,5 +11,5 @@ class BonjourPlugin(WillPlugin):
         self.reply(message, u'안녕하세요')
 
     @respond_to(u'사과해')
-    def say_hi_will(self, message):
+    def say_sorry_will(self, message):
         self.reply(message, u'기본 설정에 문제가 있었습니다. 죄송합니다.')
