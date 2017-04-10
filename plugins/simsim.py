@@ -34,8 +34,8 @@ class SimSimPlugin(WillPlugin):
         self._load_questions()
 
     def _load_questions(self):
-        data = self.load(self._redis_key, [])
-        self._questions = {k: QuestionData(**v) for k, v in data.items()}
+        data = self.load(self._redis_key, {})
+        self._questions = {k: [QuestionData(**datum) for datum in v] for k, v in data.items()}
 
     def _save_questions(self):
         self.save(self._redis_key, self._questions)
@@ -78,7 +78,7 @@ class SimSimPlugin(WillPlugin):
         return data[index]
 
 
-    @respond_to(u'질문 (?P"<question>.*") 대답 (?P"<answer>.*")')
+    @respond_to(u'질문 (?P<question>".*") 대답 (?P<answer>".*")')
     def register(self, message, question, answer):
         def _is_valid_request():
             return question and answer
@@ -89,7 +89,7 @@ class SimSimPlugin(WillPlugin):
 
         self._register(question, answer)
 
-    @respond_to(u'상연아 (?P"<question>.*")')
+    @respond_to(u'상연아 (?P"<question>".*")')
     def answer(self, message, question):
         answer = self._answer(question)
         if not answer:
