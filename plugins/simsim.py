@@ -35,7 +35,8 @@ class SimSimPlugin(WillPlugin):
 
     def _load_questions(self):
         data = self.load(self._redis_key, {})
-        self._questions = {k: [QuestionData(**datum) for datum in v] for k, v in data.items()}
+        safe_data = [datum for datum in data if isinstance(datum, dict)]
+        self._questions = safe_data
 
     def _save_questions(self):
         self.save(self._redis_key, self._questions)
