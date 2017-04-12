@@ -63,9 +63,9 @@ class SimSimPlugin(WillPlugin):
         return datum.answer
 
     def _find_recently_answered_question(self):
-        questions = self._load_questions()
+        self._load_questions()
         now = datetime.now()
-        for question, data in questions.items():
+        for question, data in self._questions.items():
             if (now - data.questioned_at).seconds < 10:
                 return data
 
