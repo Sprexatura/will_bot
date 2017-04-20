@@ -84,7 +84,6 @@ class SimSimPlugin(WillPlugin):
                 result = datum
         return result
 
-
     @respond_to(u'질문 (?P<question>".*") 대답 (?P<answer>".*")')
     def register(self, message, question, answer):
         def _is_valid_request():
@@ -96,8 +95,12 @@ class SimSimPlugin(WillPlugin):
 
         self._register(question, answer)
 
-    @respond_to(u'상연아 (?P<question>".*")')
+    def make_answer_format(self, question):
+        return '"' + question[:-1] + '"'
+
+    @respond_to(u'(?P<question>.*\?$)')
     def answer(self, message, question):
+        question = self.make_answer_format(question)
         answer = self._answer(question)
         if not answer:
             self.reply(message, u'아 뭐라 말해야될지 모르겠다.')
