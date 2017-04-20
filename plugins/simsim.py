@@ -104,14 +104,3 @@ class SimSimPlugin(WillPlugin):
             return
 
         self.reply(message, answer)
-
-    # @hear(u'(?P<laugh>ㅋ+)')
-    # def log_laugh_at_answer(self, message, laugh):
-    #     question_data = self._find_recently_answered_question()
-    #     if not question_data:
-    #         return
-    #
-    #     question_data.score += len(laugh)
-
-
-        question_data.score += len(laugh)
