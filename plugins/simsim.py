@@ -40,14 +40,16 @@ class SimSimPlugin(WillPlugin):
         self._questions = safe_data
 
     def _save_questions(self):
-        self.save(self._redis_key, self._questions)
+        safe_data = {question: [datum.to_dict() for datum in question_data]
+                     for question, question_data in self._questions.items()}
+        self.save(self._redis_key, safe_data)
 
     def _register(self, question, answer):
         self._load_questions()
 
         if question not in self._questions:
             self._questions[question] = []
-        self._questions[question].append(QuestionData(answer).to_dict())
+        self._questions[question].append(QuestionData(answer))
 
         self._save_questions()
 
@@ -60,6 +62,7 @@ class SimSimPlugin(WillPlugin):
 
         datum = self._find_highest_score_question(question_data)
         datum.refresh_questioned_at()
+        self._save_questions()
         return datum.answer
 
     def _find_recently_answered_question(self):
@@ -72,13 +75,13 @@ class SimSimPlugin(WillPlugin):
 
     @staticmethod
     def _find_highest_score_question(data):
-        index = 0
+        result = None
         highest = 0
-        for idx, datum in enumerate(data):
-            if datum.score > highest:
+        for datum in data:
+            if datum.score >= highest:
                 highest = datum.score
-                index = idx
-        return data[index]
+                result = datum
+        return result
 
 
     @respond_to(u'질문 (?P<question>".*") 대답 (?P<answer>".*")')
