@@ -3,6 +3,7 @@
 # encoding: utf-8
 
 from datetime import datetime
+from random import choice
 
 from will.plugin import WillPlugin
 from will.decorators import respond_to, periodic, hear, randomly, route, rendered_template, require_settings
@@ -60,7 +61,7 @@ class SimSimPlugin(WillPlugin):
         if not question_data:
             return
 
-        datum = self._find_highest_score_question(question_data)
+        datum = choice(question_data)
         datum.refresh_questioned_at()
         self._save_questions()
         return datum.answer
@@ -104,10 +105,13 @@ class SimSimPlugin(WillPlugin):
 
         self.reply(message, answer)
 
-    @hear(u'(?P<laugh>ㅋ+)')
-    def log_laugh_at_answer(self, message, laugh):
-        question_data = self._find_recently_answered_question()
-        if not question_data:
-            return
+    # @hear(u'(?P<laugh>ㅋ+)')
+    # def log_laugh_at_answer(self, message, laugh):
+    #     question_data = self._find_recently_answered_question()
+    #     if not question_data:
+    #         return
+    #
+    #     question_data.score += len(laugh)
+
 
         question_data.score += len(laugh)
