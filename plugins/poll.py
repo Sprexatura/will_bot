@@ -20,7 +20,7 @@ RESPOND_TO = {
 
 RESPOND_MSG = {
     u'NOT_END_POLL': u'진행중인 투표가 있네요. 먼저 종료해주세요.',
-    u'GUIDE_POLL': u'참석하시면 저에게 \'{}\'이라고 답해주세요.'.format(RESPOND_TO['ATTEND']),
+    u'GUIDE_POLL': u'참석하시면 저에게 \'{}\'이라고 답해주세요.'.format(RESPOND_TO['ATTEND'][1:-1]),
     u'ANSWERED': u'{} 님은 이미 참석한다고 답하셨어요.',
     u'THANKS': u'{} 님 답변 감사합니다.',
     u'RESULT': u'총 {}명의 다음의 회원들이 참석합니다.\n{}',
@@ -75,7 +75,8 @@ class PollPlugin(WillPlugin):
 
     @respond_to(RESPOND_TO['WILL_BE'])
     def will_be(self, message):
-        self.reply(message, RESPOND_MSG['WILL_BE'])
+        self.reply(message,
+                   self.remove_first_and_last_char_in_msg(RESPOND_MSG['WILL_BE']))
 
     @respond_to(RESPOND_TO['HELP'])
     def help_poll(self, message):
@@ -92,7 +93,8 @@ class PollPlugin(WillPlugin):
     @respond_to(RESPOND_TO['START_POLL'])
     def start_poll(self, message):
         if self.poll_start:
-            self.reply(message, RESPOND_MSG['NOT_END_POLL'])
+            self.reply(message,
+                       self.remove_first_and_last_char_in_msg(RESPOND_MSG['NOT_END_POLL']))
             return
 
         self.poll_start = True
