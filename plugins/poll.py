@@ -70,6 +70,9 @@ class PollPlugin(WillPlugin):
                    RESPOND_MSG['NOT_MATCHED'].format(
                        self._caller_name(message)))
 
+    def remove_first_and_last_char_in_msg(self, message):
+        return message[1:-1]
+
     @respond_to(RESPOND_TO['WILL_BE'])
     def will_be(self, message):
         self.reply(message, RESPOND_MSG['WILL_BE'])
@@ -81,8 +84,9 @@ class PollPlugin(WillPlugin):
         * {}
         * {}
         * {}
-        """.format(RESPOND_TO['START_POLL'],
-                   RESPOND_TO['END_POLL'], RESPOND_TO['WILL_BE'])
+        """.format(self.remove_first_and_last_char_in_msg(RESPOND_TO['START_POLL']),
+                   self.remove_first_and_last_char_in_msg(RESPOND_TO['END_POLL']),
+                   self.remove_first_and_last_char_in_msg(RESPOND_TO['WILL_BE']))
         self.reply(message, msg)
 
     @respond_to(RESPOND_TO['START_POLL'])
